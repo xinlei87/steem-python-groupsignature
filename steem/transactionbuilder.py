@@ -145,7 +145,7 @@ class TransactionBuilder(dict):
                 raise e
 
         try:
-            self.steemd.broadcast_transaction(self.json())
+            self.steemd.broadcast_transaction_synchronous(self.json())
         except Exception as e:
             raise e
 

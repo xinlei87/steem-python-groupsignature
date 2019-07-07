@@ -366,6 +366,26 @@ api_methods = [
         'params': [],
     },
     {
+        'api':'group_signature_api',
+        'method':'get_vk',
+        'params':[]
+    },
+    {
+        'api':'group_signature_api',
+        'method':'get_pk',
+        'params':[]
+    },
+    {
+        'api':'group_signature_api',
+        'method':'extract',
+        'params':[('userID','str')]
+    },
+    {
+        'api':'group_signature_api',
+        'method':'get_ok',
+        'params':[('e1','str'),('e2','str')]
+    },
+    {
         'api': 'database_api',
         'method': 'get_miner_queue',
         'params': [],
@@ -519,6 +539,7 @@ api_methods = [
         'method': 'get_key_references',
         'params': [('public_keys', 'List[str]')],
     },
+
 ]
 
 method_template = """

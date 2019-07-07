@@ -15,9 +15,9 @@ from .types import (Int16, Uint16, Uint32, Uint64, String, HexString, Bytes,
 default_prefix = "STM"
 
 asset_precision = {
-    "STEEM": 3,
+    "TESTS": 3,
     "VESTS": 6,
-    "SBD": 3,
+    "TBD": 3,
 }
 
 
@@ -48,7 +48,6 @@ class Operation:
             # class name like FeedPublish
             self.name = type(self.op).__name__
             self.opId = operations[self.to_method_name(self.name)]
-
     @staticmethod
     def get_operation_name_for_id(_id):
         """ Convert an operation id into the corresponding string
@@ -232,7 +231,62 @@ class Comment(GrapheneObject):
                     ('json_metadata', String(meta)),
                 ]))
 
+class CommitPaper(GrapheneObject):
+    def __init__(self, *args, **kwargs):
+        if isArgsThisClass(self, args):
+            self.data = args[0].data
+        else:
+            if len(args) == 1 and len(kwargs) == 0:
+                kwargs = args[0]
+            meta = ""
+            if "json_metadata" in kwargs and kwargs["json_metadata"]:
+                if (isinstance(kwargs["json_metadata"], dict)
+                        or isinstance(kwargs["json_metadata"], list)):
+                    meta = json.dumps(kwargs["json_metadata"])
+                else:
+                    meta = kwargs["json_metadata"]
+            super(CommitPaper, self).__init__(
+                OrderedDict([
+                    ('account',String(kwargs['account'])),
+                    ('author', String(kwargs["author"])),
+                    ('permlink', String(kwargs["permlink"])),
+                    ('title', String(kwargs["title"])),
+                    ('body', String(kwargs["body"])),
+                    ('json_metadata', String(meta)),
+                    ('c0', String(kwargs["c0"])),
+                    ('c5', String(kwargs["c5"])),
+                    ('c6', String(kwargs["c6"])),
+                    ('e1', String(kwargs["e1"])),
+                    ('e2', String(kwargs["e2"])),
+                    ('e3', String(kwargs["e3"])),
+                    ('c', String(kwargs["c"])),
+                    ('s1', String(kwargs["s1"])),
+                    ('s2', String(kwargs["s2"])),
+                    ('s3', String(kwargs["s3"])),
+                ]))
+class ApplyOpen(GrapheneObject):
+    def __init__(self, *args, **kwargs):
+        if isArgsThisClass(self, args):
+            self.data = args[0].data
+        else:
+            if len(args) == 1 and len(kwargs) == 0:
+                kwargs = args[0]
+            meta = ""
+            if "json_metadata" in kwargs and kwargs["json_metadata"]:
+                if (isinstance(kwargs["json_metadata"], dict)
+                        or isinstance(kwargs["json_metadata"], list)):
+                    meta = json.dumps(kwargs["json_metadata"])
+                else:
+                    meta = kwargs["json_metadata"]
 
+            super(ApplyOpen, self).__init__(
+                OrderedDict([
+                    ('account',String(kwargs['account'])),
+                    ('author', String(kwargs["author"])),
+                    ('lambda', String(kwargs["lambda"])),
+                    ('permlink', String(kwargs["permlink"])),
+                    ('json_metadata', String(meta)),
+                ]))
 class Amount:
     def __init__(self, d):
         self.amount, self.asset = d.strip().split(" ")

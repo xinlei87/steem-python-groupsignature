@@ -123,7 +123,6 @@ class Commit(object):
             no_broadcast=self.no_broadcast,
             expiration=self.expiration)
         tx.appendOps(ops)
-
         if self.unsigned:
             tx.addSigningInformation(account, permission)
             return tx

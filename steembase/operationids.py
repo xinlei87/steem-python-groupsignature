@@ -1,4 +1,6 @@
 op_names = [
+    'commit_paper',
+    'apply_open',
     'vote',
     'comment',
     'transfer',

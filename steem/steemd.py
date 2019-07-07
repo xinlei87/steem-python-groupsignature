@@ -62,9 +62,9 @@ class Steemd(HttpClient):
             dictionary with keys chain_id, prefix, and other chain
             specific settings
         """
+
         props = self.get_dynamic_global_properties()
         chain = props["current_supply"].split(" ")[1]
-
         assert chain in known_chains, "The chain you are connecting " + \
                                       "to is not supported"
         return known_chains.get(chain)
@@ -871,7 +871,20 @@ class Steemd(HttpClient):
     def get_active_witnesses(self):
         """ Get a list of currently active witnesses. """
         return self.call('get_active_witnesses', api='database_api')
-
+# -------------
+    def get_vk(self):
+        """get vk """
+        return self.call('get_vk',api='group_signature_api')
+    def get_pk(self):
+        """get pk """
+        return self.call('get_pk',api='group_signature_api')
+    def user_extract(self, userID):
+        """user extract"""
+        return self.call('extract', **{'userID':userID}, api = 'group_signature_api')
+    def get_ok(self, e1, e2):
+        """get open key"""
+        return self.call('get_ok',**{'e1':e1,'e2':e2}, api = 'group_signature_api')
+# ------------------
     def get_vesting_delegations(self, account, from_account,
                                 limit):
         """ get_vesting_delegations """

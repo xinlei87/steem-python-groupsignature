@@ -84,7 +84,8 @@ class HttpClient(object):
             socket_options=socket_options,
             headers={'Content-Type': 'application/json'},
             cert_reqs='CERT_REQUIRED',
-            ca_certs=certifi.where())
+            ca_certs=certifi.where()
+            )
         '''
             urlopen(method, url, body=None, headers=None, retries=None,
             redirect=True, assert_same_host=True, timeout=<object object>,
@@ -184,7 +185,7 @@ class HttpClient(object):
             Otherwise, a Python dictionary is returned.
 
         """
-
+# ----------------有问题-----------------------------
         # if kwargs is non-empty after this, it becomes the call params
         as_json = kwargs.pop('as_json', True)
         api = kwargs.pop('api', None)
@@ -192,13 +193,16 @@ class HttpClient(object):
 
         # `kwargs` for object-style param, `args` for list-style. pick one.
         assert not (kwargs and args), 'fail - passed array AND object args'
-        params = kwargs if kwargs else args
-
+        if api == 'group_signature_api' and len(kwargs) == 0:
+            params = kwargs
+        else:
+            params = kwargs if kwargs else args
+# //-----------------------------
         if api:
             body = {'jsonrpc': '2.0',
                     'id': _id,
-                    'method': 'call',
-                    'params': [api, name, params]}
+                    'method': api+'.'+name,
+                    'params': params}
         else:
             body = {'jsonrpc': '2.0',
                     'id': _id,
@@ -222,7 +226,6 @@ class HttpClient(object):
             as handle node fail-over.
 
         """
-
         # tuple of Exceptions which are eligible for retry
         retry_exceptions = (MaxRetryError, ReadTimeoutError,
                             ProtocolError, RPCErrorRecoverable,)
@@ -242,12 +245,16 @@ class HttpClient(object):
             try:
 
                 body_kwargs = kwargs.copy()
-                if not self._curr_node_downgraded():
+                
+                if 'api' in body_kwargs.keys() and body_kwargs['api'] == 'group_signature_api':
+                    body_kwargs['api'] = 'group_signature_api'
+                elif not self._curr_node_downgraded():
                     body_kwargs['api'] = 'condenser_api'
-
+                
+                
                 body = HttpClient.json_rpc_body(name, *args, **body_kwargs)
+                print(body)
                 response = self.request(body=body)
-
                 success_codes = tuple(list(response.REDIRECT_STATUSES) + [200])
                 if response.status not in success_codes:
                     raise RPCErrorRecoverable("non-200 response: %s from %s"
